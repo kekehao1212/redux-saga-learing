@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga'
-import { put, takeEvery, all, take, call,select, fork} from 'redux-saga/effects'
+import { put, takeEvery, all, take, call,select, fork, cancelled, cancel} from 'redux-saga/effects'
 
 function judgeIncrement() {
   return new Promise((resolve, reject) => {
@@ -35,7 +35,9 @@ function* incrementAsync() {
 
 function* watchIncrementAsync() {
   // yield takeEvery('INCREMENT_ASYNC', incremetAsync)
-  yield takeEvery('INCREMENT_ASYNC', main)
+  yield take('INCREMENT_ASYNC')
+  yield call(main)
+  console.log('watchFinishi')
 }
 
 
@@ -60,19 +62,26 @@ function testPromise(timeInterval, result) {
 
 function testCreator(timeInterval, result, name) {
   return function* () {
-    console.log(`${name}Begin`)
-    const callResult = yield call(testPromise, timeInterval, result)
-    console.log('callResult    ',callResult)
-    console.log(`${name}Finishi`)
+    try {
+      console.log(`${name}Begin`)
+      const callResult = yield call(testPromise, timeInterval, result)
+      console.log('callResult    ',callResult)
+      console.log(`${name}Finishi`)
+    } finally {
+      if (yield cancelled()) {
+        console.log(`${name} is be cacelled`)
+      }
+    }
   }
 }
 
 
 function* testAll() {
   const test1Result = yield fork(testCreator(5000, 'test1111111111', 'test1'))
-  console.log('tes1Result', test1Result)
+  yield delay(2000)
+  console.log('ready to cancel')
+  yield cancel(test1Result)
   const test2Result = yield fork(testCreator(2000, 'test22222222222', 'test2'))
-  console.log('test2Result', test2Result)
   console.log('testAll FINISHI')
 }
 
