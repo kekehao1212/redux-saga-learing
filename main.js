@@ -14,6 +14,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 const store = createStore(
   reducer,
+  {count: 10},
   applyMiddleware(sagaMiddleware)
 )
 sagaMiddleware.run(saga)

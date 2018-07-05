@@ -1,5 +1,6 @@
 import { delay } from 'redux-saga'
-import { put, takeEvery, all, take, call,select, fork, cancelled, cancel} from 'redux-saga/effects'
+import { put, takeEvery, all, take, call,select, fork, cancelled, cancel, actionChannel} from 'redux-saga/effects'
+import { buffers } from 'redux-saga';
 
 function judgeIncrement() {
   return new Promise((resolve, reject) => {
@@ -34,9 +35,11 @@ function* incrementAsync() {
 }
 
 function* watchIncrementAsync() {
-  // yield takeEvery('INCREMENT_ASYNC', incremetAsync)
-  yield take('INCREMENT_ASYNC')
-  yield call(main)
+  const resultActionChanel = yield actionChannel('INCREMENT_ASYNC', buffers.sliding(5))
+  console.log(resultActionChanel)
+  yield takeEvery('INCREMENT_ASYNC', main)
+  // yield take('INCREMENT_ASYNC')
+  // yield call(main)
   console.log('watchFinishi')
 }
 
@@ -75,6 +78,9 @@ function testCreator(timeInterval, result, name) {
   }
 }
 
+function testActionChanel() {
+
+}
 
 function* testAll() {
   const test1Result = yield fork(testCreator(5000, 'test1111111111', 'test1'))
