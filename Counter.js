@@ -1,26 +1,54 @@
 /*eslint-disable no-unused-vars */
 import React, { Component, PropTypes } from 'react'
+import {connect} from 'react-redux'
+import { bindActionCreators } from 'redux';
 
-
-const Counter = ({ value, onIncrement, onDecrement }) =>
+class Counter extends Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
       <div>
-        <button onClick={onIncrement}>
+        <button onClick={this.props.add}>
           Increment
         </button>
         {' '}
-        <button onClick={onDecrement}>
+        <button onClick={this.props.dec}>
           Decrement
         </button>
         <hr />
         <div>
-          Clicked: {value} times
+          Clicked: {this.props.count} times
         </div>
       </div>
+    )
+  }
+}
+
+const actionCreators = (value) => ({
+  type: 'ADD',
+  value
+})
+
+function mapStateToProps(state) {
+  return {
+    count: state.count
+  }
+}
+function mapDispatchToProps(dispatch) {
+  console.log(bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch))
+  return {
+    add: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch),
+    dec: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch)
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Counter)
 
 Counter.propTypes = {
-  value: PropTypes.number.isRequired,
+  count: PropTypes.number,
   onIncrement: PropTypes.func.isRequired,
   onDecrement: PropTypes.func.isRequired
 }
 
-export default Counter
