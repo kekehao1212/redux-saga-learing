@@ -36,11 +36,23 @@ function mapStateToProps(state) {
     count: state.count
   }
 }
-function mapDispatchToProps(dispatch) {
-  console.log(bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch))
+
+const mapDispatchToProps = {
+  add: () => ({type: 'INCREMENT_ASYNC'}),
+  dec: () => ({type: 'DECREMENT'})
+}
+// function mapDispatchToProps(dispatch) {
+//   console.log(bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch))
+//   return {
+//     add: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch),
+//     dec: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch)
+//   }
+// }
+
+function mergeProps(stateprops, dispatchProps, ownProps) {
+  console.log(stateprops, dispatchProps, ownProps)
   return {
-    add: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch),
-    dec: bindActionCreators(() => ({type: 'INCREMENT_ASYNC'}),dispatch)
+    count: 100
   }
 }
 
@@ -48,7 +60,7 @@ export default connect(mapStateToProps,mapDispatchToProps)(Counter)
 
 Counter.propTypes = {
   count: PropTypes.number,
-  onIncrement: PropTypes.func.isRequired,
-  onDecrement: PropTypes.func.isRequired
+  onIncrement: PropTypes.func,
+  onDecrement: PropTypes.func
 }
 

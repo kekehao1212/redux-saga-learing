@@ -7,7 +7,7 @@ import createSagaMiddleware from 'redux-saga'
 import {Provider} from 'react-redux'
 import Counter from './Counter'
 import reducer from './reducers'
-
+import myMiddle from './myMiddle'
 import saga from './sagas'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -15,7 +15,7 @@ const sagaMiddleware = createSagaMiddleware()
 const store = createStore(
   reducer,
   {count: 10},
-  applyMiddleware(sagaMiddleware)
+  applyMiddleware(sagaMiddleware, myMiddle)
 )
 sagaMiddleware.run(saga)
 
