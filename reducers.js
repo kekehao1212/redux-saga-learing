@@ -1,15 +1,31 @@
-export default function counter(state = 1, action) {
-  console.log(state)
+import {
+  combineReducers
+} from "redux";
+
+function counterReaducer(state = {
+  count: 2
+}, action) {
+  console.log(state, action)
   switch (action.type) {
     case 'INCREMENT':
-      return state + 1
-    case 'INCREMENT_IF_ODD':
-      return (state % 2 !== 0) ? state + 1 : state
+      return Object.assign({}, {count: state.count+1})
     case 'DECREMENT':
-      return state - 1
+      return Object.assign({}, {count: state.count-1})
     case 'CLEAR':
-      return 0
+      return Object.assign({}, {count: 0})
     default:
       return state
   }
 }
+
+function testReaducer(state = 'djskdsk', action) {
+  if (action.type === 'INCREMENT') {
+    console.log('reducer2')
+  }
+  return state
+}
+
+export default combineReducers({
+  counter: counterReaducer,
+  test: testReaducer
+})

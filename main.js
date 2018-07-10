@@ -11,14 +11,14 @@ import myMiddle from './myMiddle'
 import saga from './sagas'
 
 const sagaMiddleware = createSagaMiddleware()
-
 const store = createStore(
   reducer,
-  {count: 10},
+  {counter: {a: 'ldskd'}},
   applyMiddleware(sagaMiddleware, myMiddle)
 )
 sagaMiddleware.run(saga)
 
+console.log(store.getState())
 const action = type => store.dispatch({type})
 
 
